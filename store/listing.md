@@ -100,67 +100,78 @@ Both features are limited to a short, explicit list of hosts.
 
 ---
 
-## Permission justifications
+## Privacy practices tab — paste-ready
 
-### `storage`
+The submit button stays disabled until every box below is filled. Each one is a
+separate field in the **Privacy practices** tab of the item's edit page.
 
-```
-Stores the user's own settings: which font is selected, the text size and
-weight steps, and which products each feature applies to. Nothing else is
-stored, and the data never leaves the browser.
-```
-
-### Host access — `*.cybozu.com`, `*.kintone.com`, `*.cybozu.cn`, `*.kintone.cn`, `*.cybozu-dev.com`
+### Single purpose description
 
 ```
-These are the domains that serve kintone and Garoon. The extension injects a
-stylesheet and rescales declared font sizes and weights on those pages. It
-reads only computed font metrics in order to rescale them proportionally, and
-sends nothing anywhere. A single host pattern cannot distinguish kintone from
-Garoon because one host serves both, so the product is determined from the URL
-path at runtime and the user can switch each one off.
+CEKit has one purpose: to reduce the friction of reading and quoting work items in a team's daily tools.
+
+On kintone and Garoon it replaces the interface font and rescales text size and weight, so the interface stays readable during a long working day. On GitHub pull request and issue pages it adds a Copy button that places the item's title and canonical link on the clipboard — which is exactly the text that gets pasted back into those same work items.
+
+Both halves serve one workflow: read an item, then quote it somewhere else. Neither runs anywhere beyond the explicit list of hosts in the manifest, and each can be switched off independently.
 ```
 
-### Host access — `github.com`
+### Permission justification — `storage`
 
 ```
-Adds a Copy button to pull request and issue pages. When the user clicks it,
-the extension reads the page title and builds the canonical URL, then writes
-both to the clipboard. It reads no other page content, runs on no other part
-of GitHub, and makes no network requests.
+Stores the user's own settings and nothing else: the selected font, the text size, minimum size and weight steps, which products each feature applies to, and whether each feature is enabled.
+
+These values never leave the browser. No page content, browsing history or personal data is stored.
+```
+
+### Permission justification — host permissions
+
+```
+*.cybozu.com, *.kintone.com, *.cybozu.cn, *.kintone.cn and *.cybozu-dev.com serve kintone and Garoon. On those pages the extension injects one stylesheet and reads the computed font size and weight of elements so it can rescale them proportionally. A single host serves several products, so a manifest match pattern cannot tell them apart; the product is resolved from the URL path at runtime and the user can switch each one off.
+
+github.com is needed for the Copy button on pull request and issue pages. When the user clicks it, the extension reads the page title and builds the canonical URL, then writes both to the clipboard. It reads nothing else and runs on no other part of GitHub.
+
+The extension makes no network requests, so no page content is transmitted anywhere.
 ```
 
 ### Remote code
 
+Select **No, I am not using remote code**, then paste:
+
 ```
-None. All code and all fonts are bundled in the package. The extension makes no
-network requests and does not use eval or any dynamic code execution.
+All JavaScript and CSS ships inside the package. The nine bundled webfonts are also in the package and are loaded from chrome-extension:// URLs, so nothing is fetched from Google Fonts or any other host while the user browses.
+
+The extension makes no network requests at all, and uses no eval(), new Function() or other dynamic code execution.
 ```
+
+### Data use certification
+
+Tick all three:
+
+- I do not sell or transfer user data to third parties, outside of the approved use cases
+- I do not use or transfer user data for purposes that are unrelated to my item's single purpose
+- I do not use or transfer user data to determine creditworthiness or for lending purposes
+
+They are all true here: the extension collects no user data at all.
 
 ---
 
-## Privacy tab answers
+## Settings page — your action, not a paste
 
-| Question | Answer |
-| --- | --- |
-| Does this item collect or use personally identifiable information? | No |
-| Health information? | No |
-| Financial and payment information? | No |
-| Authentication information? | No |
-| Personal communications? | No |
-| Location? | No |
-| Web history? | No |
-| User activity (clicks, mouse position, keystrokes)? | No |
-| Website content (text, images, sound, files)? | No |
-| Privacy policy URL | `https://github.com/trunghieu0207/CEKit/blob/main/PRIVACY.md` |
+Two of the blockers are on the account **Settings** page rather than the item:
 
-Then tick all three certifications: no selling to third parties, no use
-unrelated to the single purpose, no use to determine creditworthiness.
+- **Publisher contact email** — enter it.
+- **Verify that email** — start the verification and click the link Google sends.
 
----
+Publishing is blocked until the address is both entered and verified, so do this
+early; it is the step most likely to sit waiting on an inbox.
 
 ## Before submitting
 
+- [ ] Privacy practices tab: single purpose, `storage`, host permissions,
+      remote code, and the three data-use certifications — all blockers until
+      filled. Paste-ready text is in the section above.
+- [ ] Settings page: enter the publisher contact email and complete the
+      verification link Google emails you.
 - [x] Privacy policy URL — the repository is public, so this is live:
       `https://github.com/trunghieu0207/CEKit/blob/main/PRIVACY.md`
       Keep the repository public for as long as the item is listed; if it goes
