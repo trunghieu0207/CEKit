@@ -28,18 +28,26 @@ function distToSegment(px, py, ax, ay, bx, by) {
   return Math.hypot(px - (ax + t * dx), py - (ay + t * dy))
 }
 
-function drawTile(size) {
+/**
+ * `art` is the size of the drawn tile inside the `size` canvas; the remainder
+ * is transparent padding. The Chrome Web Store listing icon wants 96x96 of
+ * artwork inside a 128x128 image, while the icons inside the extension fill
+ * their canvas completely.
+ */
+function drawTile(size, art = size) {
   const n = size * SS
+  const a = art * SS
+  const off = (n - a) / 2
   // RGBA at supersampled resolution.
   const buf = new Uint8Array(n * n * 4)
 
-  const radius = n * 0.22
+  const radius = a * 0.22
   const cx = n / 2
   const cy = n / 2
-  const coreR = n * 0.105
-  const nodeR = n * 0.072
-  const spoke = n * 0.032
-  const dist = n * 0.27
+  const coreR = a * 0.105
+  const nodeR = a * 0.072
+  const spoke = a * 0.032
+  const dist = a * 0.27
 
   const nodes = [-90, 30, 150].map((deg) => {
     const rad = (deg * Math.PI) / 180
@@ -50,12 +58,15 @@ function drawTile(size) {
     for (let x = 0; x < n; x++) {
       const i = (y * n + x) * 4
 
-      // Rounded-rect mask.
-      const qx = Math.max(radius - x, x - (n - 1 - radius), 0)
-      const qy = Math.max(radius - y, y - (n - 1 - radius), 0)
+      // Rounded-rect mask, inset by the padding.
+      const lx = x - off
+      const ly = y - off
+      if (lx < 0 || ly < 0 || lx >= a || ly >= a) continue
+      const qx = Math.max(radius - lx, lx - (a - 1 - radius), 0)
+      const qy = Math.max(radius - ly, ly - (a - 1 - radius), 0)
       if (Math.hypot(qx, qy) > radius) continue
 
-      const [r, g, b] = mix(TOP, BOTTOM, y / (n - 1))
+      const [r, g, b] = mix(TOP, BOTTOM, ly / (a - 1))
       buf[i] = r
       buf[i + 1] = g
       buf[i + 2] = b
@@ -160,5 +171,13 @@ await mkdir(OUT_DIR, { recursive: true })
 for (const size of SIZES) {
   const png = encodePng(drawTile(size), size)
   await writeFile(resolve(OUT_DIR, `icon-${size}.png`), png)
-  console.log(`icon-${size}.png  ${png.length} bytes`)
+  console.log(`icons/icon-${size}.png  ${png.length} bytes`)
 }
+
+// Listing asset, not part of the extension package: the store requires the
+// artwork to sit in 96x96 with 16px of transparent padding on every side.
+const STORE_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../store')
+await mkdir(STORE_DIR, { recursive: true })
+const storeIcon = encodePng(drawTile(128, 96), 128)
+await writeFile(resolve(STORE_DIR, 'store-icon-128.png'), storeIcon)
+console.log(`store/store-icon-128.png  ${storeIcon.length} bytes  (96x96 art + 16px padding)`)

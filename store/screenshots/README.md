@@ -15,3 +15,11 @@ pnpm build
 
 The GitHub frame is a mock page header, not a capture of a real repository —
 the Copy button in it is inserted by the extension's own code.
+
+The promo tile is rendered the same way from `../promo-tile.html`:
+
+```sh
+"/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" --headless \
+  --disable-gpu --allow-file-access-from-files --virtual-time-budget=3000 \
+  --window-size=440,280 --screenshot=../promo-440x280.png ../promo-tile.html
+```

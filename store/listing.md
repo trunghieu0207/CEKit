@@ -20,7 +20,23 @@ Read and share work items faster: a cleaner, larger font on kintone and Garoon, 
 
 ## Category
 
-Workflow & Planning
+`Workflow & Planning` fits the single-purpose story in the description better
+than `Developer Tools`, which only covers the GitHub half. Either is
+defensible — pick one and keep the description consistent with it.
+
+## Graphic assets
+
+Upload these from `store/`. Sizes are the store's, not ours:
+
+| Asset | File | Size | Note |
+| --- | --- | --- | --- |
+| Store icon | `store/store-icon-128.png` | 128×128 | 96×96 of artwork with 16px transparent padding, as the guidelines require. **Not** the same file as the extension's own `icons/icon-128.png`, which fills its canvas. |
+| Small promo tile | `store/promo-440x280.png` | 440×280 | Optional, but an item without one ranks lower in search. |
+| Screenshots | `store/screenshots/01-font.png`, `02-github-copy.png` | 1280×800 | At least one required, up to five. |
+
+All three are regenerated from sources in the repo: `pnpm icons` writes the
+store icon, `store/promo-tile.html` and `store/screenshots/s*.html` render with
+headless Chromium (see `store/screenshots/README.md`).
 
 ---
 
