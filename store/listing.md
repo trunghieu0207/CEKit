@@ -136,7 +136,7 @@ network requests and does not use eval or any dynamic code execution.
 | Web history? | No |
 | User activity (clicks, mouse position, keystrokes)? | No |
 | Website content (text, images, sound, files)? | No |
-| Privacy policy URL | Host PRIVACY.md and paste the URL here |
+| Privacy policy URL | `https://github.com/trunghieu0207/CEKit/blob/main/PRIVACY.md` |
 
 Then tick all three certifications: no selling to third parties, no use
 unrelated to the single purpose, no use to determine creditworthiness.
@@ -145,8 +145,10 @@ unrelated to the single purpose, no use to determine creditworthiness.
 
 ## Before submitting
 
-- [ ] Host `PRIVACY.md` at a public URL (GitHub Pages or a gist) and paste it
-      into the Privacy tab — required because the item requests host access.
+- [x] Privacy policy URL — the repository is public, so this is live:
+      `https://github.com/trunghieu0207/CEKit/blob/main/PRIVACY.md`
+      Keep the repository public for as long as the item is listed; if it goes
+      private the URL 404s and the listing is taken down.
 - [ ] Upload the screenshots in `store/screenshots/` (1280×800).
 - [ ] Publish from a developer account that is allowed to use the Cybozu name.
       The listing's remaining risk is the name itself — "Cybozu" in the title
