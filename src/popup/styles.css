@@ -1,0 +1,543 @@
+:root {
+  --bg: #ffffff;
+  --bg-sunken: #f5f7f9;
+  --border: #e2e6ea;
+  --text: #1b2733;
+  --text-dim: #6a7987;
+  --accent: #1c6fb5;
+  --accent-soft: #e8f2fb;
+  --on: #2fa36b;
+
+  /*
+   * Pinned to light on purpose: the popup does not follow the OS theme.
+   * This has to be `light`, not `light dark` — otherwise the native controls
+   * (checkbox, radio, select, scrollbar) would still render dark on a
+   * dark-mode OS and clash with the palette above.
+   */
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 640px;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+.hint {
+  display: block;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.loading {
+  padding: 40px 0;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* --- shell: sidebar + panel --- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  /*
+   * Panels differ a lot in height. Without a floor the popup would resize as
+   * the user switches menu items, and the sidebar would look truncated on the
+   * shorter ones. Just under Chrome's 600px popup cap.
+   */
+  min-height: 560px;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 10px;
+  border-right: 1px solid var(--border);
+  background: var(--bg-sunken);
+}
+
+.brand {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: 2px 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.brand img {
+  border-radius: 6px;
+}
+
+.menu {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu__item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu__item:hover {
+  background: var(--accent-soft);
+}
+
+.menu__item--on,
+.menu__item--on:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.menu__item--on .hint {
+  color: rgb(255 255 255 / 0.75);
+}
+
+.menu__glyph {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.menu__item--on .menu__glyph {
+  background: rgb(255 255 255 / 0.2);
+  color: #fff;
+}
+
+.menu__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.dot--on {
+  background: var(--on);
+}
+
+.menu__item--on .dot {
+  background: rgb(255 255 255 / 0.35);
+}
+
+.menu__item--on .dot--on {
+  background: #fff;
+}
+
+.side__foot {
+  margin-top: auto;
+  padding: 14px 8px 2px;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+/* --- scope checkboxes --- */
+
+.checks {
+  display: flex;
+  flex: 1;
+  gap: 14px;
+  align-items: center;
+  padding: 4px 3px;
+}
+
+.check {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.check input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+/* --- panel --- */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 13px 15px 11px;
+}
+
+.panel__head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel__head h2 {
+  margin-bottom: 2px;
+}
+
+.panel__body {
+  margin: 0;
+  padding: 11px 0 0;
+  border: 0;
+  display: grid;
+  gap: 9px;
+}
+
+.panel__body[disabled] {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* --- font list --- */
+
+/*
+ * Chrome caps popups at 600px tall. The font list is the only part that grows
+ * with content, so it scrolls on its own and the controls below it stay
+ * reachable without scrolling the whole popup.
+ */
+.list {
+  display: grid;
+  gap: 5px;
+  max-height: 218px;
+  /* The preview text ellipsises instead of widening the popup. */
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  /* Room for the focus ring and the scrollbar. */
+  padding: 2px 4px 2px 2px;
+  margin: -2px;
+}
+
+.font {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+}
+
+.font:hover {
+  border-color: var(--accent);
+}
+
+.font--on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.font input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.font__name {
+  flex: none;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  width: 136px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tag {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--border);
+  color: var(--text-dim);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.font__preview {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- rows --- */
+
+.row {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  font-weight: 500;
+}
+
+.row__text {
+  flex: 1;
+}
+
+select {
+  flex: 0 0 168px;
+  padding: 4px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+}
+
+.rule {
+  height: 1px;
+  margin: 2px 0;
+  border: 0;
+  background: var(--border);
+}
+
+/* --- segmented control --- */
+
+.seg {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.seg__label {
+  flex: none;
+  width: 78px;
+  font-weight: 500;
+}
+
+.seg__opts {
+  display: flex;
+  flex: 1;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+}
+
+.seg__opt {
+  position: relative;
+  flex: 1;
+  padding: 4px 0;
+  border-radius: 5px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+}
+
+.seg__opt:hover {
+  background: var(--accent-soft);
+}
+
+.seg__opt--on,
+.seg__opt--on:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.seg__opt input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.seg__opt:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* --- toggle --- */
+
+.toggle {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  width: 34px;
+  height: 20px;
+}
+
+.toggle input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.toggle__track {
+  flex: 1;
+  border-radius: 999px;
+  background: var(--border);
+  transition: background 120ms ease;
+}
+
+.toggle__knob {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  transition: transform 120ms ease;
+}
+
+.toggle input:checked + .toggle__track {
+  background: var(--accent);
+}
+
+.toggle input:checked + .toggle__track .toggle__knob {
+  transform: translateX(14px);
+}
+
+.toggle input:focus-visible + .toggle__track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --- footer --- */
+
+.footer {
+  margin-top: auto;
+  padding: 12px 0 0;
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+/* --- sample block (GitHub panel) --- */
+
+.sample {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg-sunken);
+  color: var(--text-dim);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.panel__body code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--bg-sunken);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11px;
+}
+
+/* --- sidebar secondary link + licence list --- */
+
+.side__link {
+  margin-top: auto;
+  padding: 8px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.side__link:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.side__link--on {
+  background: var(--accent);
+  color: #fff;
+}
+
+.licences {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.licences li {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: 7px;
+}
+
+.licences li:nth-child(odd) {
+  background: var(--bg-sunken);
+}
+
+.licences__name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.licences a {
+  flex: none;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
