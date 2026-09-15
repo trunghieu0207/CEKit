@@ -9,6 +9,7 @@
     "build": "pnpm typecheck && pnpm build:pages && pnpm build:content",
     "build:pages": "vite build",
     "build:content": "vite build --config vite.config.content.ts",
+    "package": "pnpm build && node scripts/package.mjs",
     "watch": "concurrently -n pages,content -c cyan,magenta \"vite build --watch\" \"vite build --config vite.config.content.ts --watch\"",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "fonts": "node scripts/fetch-fonts.mjs",
