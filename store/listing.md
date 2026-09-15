@@ -88,18 +88,6 @@ and "Garoon" are trademarks of Cybozu, Inc.
 
 ---
 
-## Single purpose statement
-
-```
-CEKit has one purpose: to reduce the friction of reading and quoting work items
-in a team's daily engineering tools. The font feature serves the reading half
-on kintone and Garoon; the copy button serves the quoting half on GitHub, by
-producing the title and link that get pasted back into those same work items.
-Both features are limited to a short, explicit list of hosts.
-```
-
----
-
 ## Privacy practices tab — paste-ready
 
 The submit button stays disabled until every box below is filled. Each one is a
