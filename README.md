@@ -287,3 +287,23 @@ ES modules:
 `*.cybozu-dev.com`. Custom kintone domains would need
 `optional_host_permissions` plus `chrome.scripting.registerContentScripts`;
 not implemented yet.
+
+## Releasing an update
+
+```sh
+pnpm bump          # patch by default; also `pnpm bump minor` / `major`
+pnpm package       # builds, zips dist/, and checks the archive
+```
+
+Then upload `cekit-<version>.zip` in the developer dashboard and submit. The
+listing text, images and permission justifications persist between updates, so
+only the package changes.
+
+Two things worth planning around:
+
+- **Adding a permission disables the extension for existing users** until each
+  of them accepts the new prompt. If more hosts are coming — a GitHub
+  Enterprise domain, say — add them in one release rather than several.
+- The store rejects a version it has already seen, which is why `pnpm bump`
+  exists: it moves `public/manifest.json` and `package.json` together, and the
+  zip is named after the version so a forgotten bump shows up before upload.
