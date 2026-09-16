@@ -161,7 +161,7 @@ early; it is the step most likely to sit waiting on an inbox.
 - [ ] Settings page: enter the publisher contact email and complete the
       verification link Google emails you.
 - [x] Privacy policy URL — the repository is public, so this is live:
-      `https://github.com/trunghieu0207/CEKit/blob/main/PRIVACY.md`
+      `https://github.com/trunghieu0207/CyKit/blob/main/PRIVACY.md`
       Keep the repository public for as long as the item is listed; if it goes
       private the URL 404s and the listing is taken down.
 - [ ] Upload the screenshots in `store/screenshots/` (1280×800).
