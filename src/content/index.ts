@@ -21,7 +21,7 @@ function applyAll(settings: Settings): void {
     try {
       feature(settings)
     } catch (err) {
-      console.error('[CEKit] feature failed', err)
+      console.error('[CyKit] feature failed', err)
     }
   }
 }

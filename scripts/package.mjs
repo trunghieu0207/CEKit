@@ -25,7 +25,7 @@ if (!existsSync(resolve(DIST, 'manifest.json'))) {
 }
 
 const manifest = JSON.parse(readFileSync(resolve(DIST, 'manifest.json'), 'utf8'))
-const zipPath = resolve(ROOT, `cekit-${manifest.version}.zip`)
+const zipPath = resolve(ROOT, `cykit-${manifest.version}.zip`)
 
 rmSync(zipPath, { force: true })
 

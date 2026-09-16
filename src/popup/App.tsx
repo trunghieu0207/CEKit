@@ -42,8 +42,8 @@ export function App() {
         <div className="brand">
           <img src="icons/icon-48.png" alt="" width={26} height={26} />
           <span>
-            CEKit
-            <span className="hint">Cybozu Extension Kit</span>
+            CyKit
+            <span className="hint">Quality-of-life tweaks</span>
           </span>
         </div>
 

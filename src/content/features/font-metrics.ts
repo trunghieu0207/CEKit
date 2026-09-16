@@ -88,16 +88,16 @@ function isActive(m: Metrics): boolean {
  * recorded, so restoring never clobbers an inline style we did not set.
  */
 function override(el: HTMLElement, prop: 'font-size' | 'font-weight', value: string): void {
-  const key = prop === 'font-size' ? 'cekitFs' : 'cekitFw'
-  el.dataset.cekitText = '1'
+  const key = prop === 'font-size' ? 'cykitFs' : 'cykitFw'
+  el.dataset.cykitText = '1'
   if (el.dataset[key] === undefined) el.dataset[key] = el.style.getPropertyValue(prop)
   el.style.setProperty(prop, value, 'important')
 }
 
 function restore(el: HTMLElement): void {
   for (const [key, prop] of [
-    ['cekitFs', 'font-size'],
-    ['cekitFw', 'font-weight'],
+    ['cykitFs', 'font-size'],
+    ['cykitFw', 'font-weight'],
   ] as const) {
     const saved = el.dataset[key]
     if (saved === undefined) continue
@@ -105,7 +105,7 @@ function restore(el: HTMLElement): void {
     else el.style.removeProperty(prop)
     delete el.dataset[key]
   }
-  delete el.dataset.cekitText
+  delete el.dataset.cykitText
   if (el.getAttribute('style') === '') el.removeAttribute('style')
 }
 
@@ -119,8 +119,8 @@ function restore(el: HTMLElement): void {
  * parent and is correctly skipped.
  */
 function pass(root: HTMLElement, m: Metrics): void {
-  for (const el of root.querySelectorAll<HTMLElement>('[data-cekit-text]')) restore(el)
-  if (root.dataset.cekitText) restore(root)
+  for (const el of root.querySelectorAll<HTMLElement>('[data-cykit-text]')) restore(el)
+  if (root.dataset.cykitText) restore(root)
   if (!isActive(m)) return
 
   // SVG elements are not HTMLElement, so they drop out here along with their
@@ -142,7 +142,7 @@ function pass(root: HTMLElement, m: Metrics): void {
   const total = scalable.length + iconLike.length
   if (total > SLOW_PASS_ELEMENTS && !warnedSlow) {
     warnedSlow = true
-    console.debug(`[CEKit] font metrics pass over ${total} elements`)
+    console.debug(`[CyKit] font metrics pass over ${total} elements`)
   }
 
   // Read pass — no writes, so style is resolved once. Icon-like elements are

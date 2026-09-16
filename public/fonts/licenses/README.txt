@@ -1,4 +1,4 @@
-Fonts bundled with Cybozu Extension Kit
+Fonts bundled with CyKit Extension
 =======================================
 
 Each font is redistributed under its own licence, reproduced in full in

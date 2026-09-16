@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Cybozu Extension Kit",
+  "name": "CyKit Extension",
   "version": "0.1.0",
   "description": "Read and share work items faster: a cleaner, larger font on kintone and Garoon, plus one-click copy of GitHub PR titles and links.",
   "icons": {
@@ -10,7 +10,7 @@
     "128": "icons/icon-128.png"
   },
   "action": {
-    "default_title": "Cybozu Extension Kit",
+    "default_title": "CyKit Extension",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon-16.png",

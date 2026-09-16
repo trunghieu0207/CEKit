@@ -17,8 +17,8 @@ import type { Settings } from '../../shared/types'
  * on the clipboard.
  */
 
-const BUTTON_ID = 'cekit-gh-copy'
-const STYLE_ID = 'cekit-gh-copy-style'
+const BUTTON_ID = 'cykit-gh-copy'
+const STYLE_ID = 'cykit-gh-copy-style'
 
 /** How long the button shows its confirmation before going back to "Copy". */
 const CONFIRM_MS = 1400
@@ -133,7 +133,7 @@ function buildButton(): HTMLButtonElement {
   button.id = BUTTON_ID
   button.type = 'button'
   button.textContent = 'Copy'
-  button.title = 'Copy title and link (CEKit)'
+  button.title = 'Copy title and link (CyKit)'
 
   button.addEventListener('click', (event) => {
     event.preventDefault()

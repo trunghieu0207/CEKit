@@ -1,4 +1,4 @@
-# Chrome Web Store listing — CEKit
+# Chrome Web Store listing — CyKit
 
 Copy/paste source for the Developer Dashboard. Keep the single-purpose framing:
 lead with the purpose, then the features that serve it. Do not open with a list
@@ -9,7 +9,7 @@ of the three sites — that reads as a multi-purpose extension.
 ## Name
 
 ```
-Cybozu Extension Kit (CEKit)
+CyKit Extension
 ```
 
 ## Short description (132 char limit — currently 130)
@@ -43,14 +43,14 @@ headless Chromium (see `store/screenshots/README.md`).
 ## Detailed description
 
 ```
-CEKit removes the small, everyday friction in reading and sharing work items
+CyKit removes the small, everyday friction in reading and sharing work items
 across the tools an engineering team uses all day.
 
 Two things slow that down. Interface text that is too small or too thin to read
 comfortably for hours. And re-typing a ticket title and link every time you
 need to quote a pull request somewhere else.
 
-CEKit fixes both.
+CyKit fixes both.
 
 READABLE TEXT ON KINTONE AND GAROON
 
@@ -81,7 +81,7 @@ BUILT TO STAY OUT OF THE WAY
 • Every feature has its own on/off switch. Turn one off and the page goes
   straight back to normal.
 
-CEKit is an independent, unofficial project. It is not affiliated with,
+CyKit is an independent, unofficial project. It is not affiliated with,
 endorsed by, or sponsored by Cybozu, Inc. or GitHub, Inc. "Cybozu", "kintone",
 and "Garoon" are trademarks of Cybozu, Inc.
 ```
@@ -96,7 +96,7 @@ separate field in the **Privacy practices** tab of the item's edit page.
 ### Single purpose description
 
 ```
-CEKit has one purpose: to reduce the friction of reading and quoting work items in a team's daily tools.
+CyKit has one purpose: to reduce the friction of reading and quoting work items in a team's daily tools.
 
 On kintone and Garoon it replaces the interface font and rescales text size and weight, so the interface stays readable during a long working day. On GitHub pull request and issue pages it adds a Copy button that places the item's title and canonical link on the clipboard — which is exactly the text that gets pasted back into those same work items.
 

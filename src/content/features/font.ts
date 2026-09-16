@@ -2,7 +2,7 @@ import { buildFontCss } from '../../shared/css'
 import { isInScope } from '../../shared/scope'
 import type { Settings } from '../../shared/types'
 
-const STYLE_ID = 'cekit-font'
+const STYLE_ID = 'cykit-font'
 
 let styleEl: HTMLStyleElement | null = null
 

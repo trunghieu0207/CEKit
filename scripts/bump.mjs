@@ -47,4 +47,4 @@ pkg.version = to
 writeFileSync(PACKAGE, JSON.stringify(pkg, null, 2) + '\n')
 
 console.log(`${from} -> ${to}  (manifest.json + package.json)`)
-console.log(`next: pnpm package  ->  cekit-${to}.zip`)
+console.log(`next: pnpm package  ->  cykit-${to}.zip`)

@@ -167,7 +167,7 @@ export const FONT_FACES: readonly FontFace[] = ${JSON.stringify(entries, null, 2
   await writeFile(OUT_TS, ts)
 
   const index =
-    'Fonts bundled with Cybozu Extension Kit\n' +
+    'Fonts bundled with CyKit Extension\n' +
     '=======================================\n\n' +
     'Each font is redistributed under its own licence, reproduced in full in\n' +
     'this directory. Sources are the families as published on Google Fonts.\n\n' +

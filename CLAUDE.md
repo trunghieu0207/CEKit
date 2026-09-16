@@ -2,7 +2,7 @@
 
 ## Project
 
-**Cybozu Extension Kit** (CEKit) — a Manifest V3 Chrome extension with quality-of-life tweaks for
+**CyKit Extension** (CyKit) — a Manifest V3 Chrome extension with quality-of-life tweaks for
 kintone. See README.md for architecture and how to add a feature.
 
 Two Vite builds, because MV3 content scripts cannot be ES modules:

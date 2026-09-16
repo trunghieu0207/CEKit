@@ -1,13 +1,13 @@
-# Privacy Policy — Cybozu Extension Kit (CEKit)
+# Privacy Policy — CyKit Extension
 
 _Last updated: 2026-08-13_
 
-**CEKit does not collect, transmit, or sell any data.** It has no analytics, no
+**CyKit does not collect, transmit, or sell any data.** It has no analytics, no
 telemetry, no accounts, and no server of its own.
 
 ## What the extension can access
 
-CEKit runs only on the sites listed in its manifest:
+CyKit runs only on the sites listed in its manifest:
 
 - `*.cybozu.com`, `*.kintone.com`, `*.cybozu.cn`, `*.kintone.cn`,
   `*.cybozu-dev.com`
@@ -32,7 +32,7 @@ Your feature settings — chosen font, size, weight, and which products each
 feature applies to — are stored with `chrome.storage.sync`. That is Chrome's
 own settings storage. If you have Chrome Sync enabled, Chrome synchronises it
 through your Google Account so your settings follow you between devices; this
-is done by Chrome, not by CEKit, and the authors never receive it. No page
+is done by Chrome, not by CyKit, and the authors never receive it. No page
 content, browsing history, or personal data is stored.
 
 You can erase everything by removing the extension.
