@@ -91,12 +91,41 @@ function ensureStyle(): void {
   // is what GitHub's own header buttons use, so it does not read as a bolt-on.
   // Colours come from Primer's variables so it follows GitHub's light/dark
   // theme; the fallbacks cover Enterprise builds that predate them.
-  style.textContent = `#${ROOT_ID}{
+  style.textContent = `
+/*
+ * Every class below is namespaced. Generic names lose: a span of class "label"
+ * picked up GitHub's own .label rule and rendered each row's title inside a
+ * bordered pill.
+ *
+ * The reset is the second half of that defence. GitHub styles bare elements
+ * too, so anything we create inherits rules we never asked for; this strips the
+ * properties that carry visual weight, and the rules after it add back only
+ * what the menu actually wants.
+ */
+.${MENU_CLASS}, .${MENU_CLASS} *, #${ROOT_ID}, #${ROOT_ID} > button{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  background:none;
+  box-shadow:none;
+  color:inherit;
+  font:inherit;
+  letter-spacing:normal;
+  text-align:left;
+  text-decoration:none;
+  text-transform:none;
+  list-style:none;
+  float:none;
+  min-width:0;
+}
+#${ROOT_ID}{
   position:relative;
   display:inline-flex;
   margin-left:8px;
 }
-#${ROOT_ID} > button{
+#${ROOT_ID} > button.cykit-gh-trigger{
   display:inline-flex;
   align-items:center;
   gap:4px;
@@ -111,41 +140,38 @@ function ensureStyle(): void {
   line-height:20px;
   cursor:pointer;
 }
-#${ROOT_ID} > button:hover{background:var(--bgColor-muted, #eef1f4)}
-#${ROOT_ID} > button[data-copied="true"]{
+#${ROOT_ID} > button.cykit-gh-trigger:hover{background:var(--bgColor-muted, #eef1f4)}
+#${ROOT_ID} > button.cykit-gh-trigger[data-copied="true"]{
   border-color:var(--borderColor-success-emphasis, #1a7f37);
   color:var(--fgColor-success, #1a7f37);
 }
 
-/* Shaped after Primer's ActionMenu: 12px overlay, a titled header, a full-bleed
-   divider, then 6px-radius rows that highlight on hover. */
+
 .${MENU_CLASS}{
   position:fixed;
   z-index:2147483000;
   width:320px;
   max-width:calc(100vw - 16px);
-  padding:0;
   border:1px solid var(--borderColor-default, #d1d9e0);
   border-radius:12px;
   background:var(--overlay-bgColor, var(--bgColor-default, #ffffff));
   box-shadow:var(--shadow-floating-small, 0 8px 24px rgba(31,35,40,.2));
   color:var(--fgColor-default, #1f2328);
-  font:inherit;
+  font-family:inherit;
   font-size:14px;
   line-height:20px;
-  text-align:left;
   overflow:hidden;
 }
-.${MENU_CLASS} header{
+.${MENU_CLASS} .cykit-gh-head{
   padding:12px 16px;
   border-bottom:1px solid var(--borderColor-muted, #d1d9e0);
 }
-.${MENU_CLASS} header b{
+.${MENU_CLASS} .cykit-gh-title{
   display:block;
   font-size:14px;
   font-weight:600;
 }
-.${MENU_CLASS} header span{
+.${MENU_CLASS} .cykit-gh-context{
   display:block;
   margin-top:2px;
   color:var(--fgColor-muted, #59636e);
@@ -155,45 +181,41 @@ function ensureStyle(): void {
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.${MENU_CLASS} ul{
-  margin:0;
+.${MENU_CLASS} .cykit-gh-list{
   padding:8px;
-  list-style:none;
 }
-.${MENU_CLASS} button{
+.${MENU_CLASS} .cykit-gh-item{
   display:flex;
   gap:10px;
   align-items:flex-start;
   width:100%;
   padding:8px 10px;
-  border:0;
   border-radius:6px;
-  background:none;
-  color:inherit;
-  font:inherit;
-  text-align:left;
   cursor:pointer;
 }
-.${MENU_CLASS} button:hover,
-.${MENU_CLASS} button:focus-visible{
+.${MENU_CLASS} .cykit-gh-item:hover,
+.${MENU_CLASS} .cykit-gh-item:focus-visible{
   background:var(--bgColor-neutral-muted, #eef1f4);
-  outline:none;
 }
-.${MENU_CLASS} svg{
+.${MENU_CLASS} .cykit-gh-icon{
   flex:none;
   margin-top:2px;
   color:var(--fgColor-muted, #59636e);
 }
-.${MENU_CLASS} button:hover svg,
-.${MENU_CLASS} button:focus-visible svg{
+.${MENU_CLASS} .cykit-gh-item:hover .cykit-gh-icon,
+.${MENU_CLASS} .cykit-gh-item:focus-visible .cykit-gh-icon{
   color:var(--fgColor-default, #1f2328);
 }
-.${MENU_CLASS} .label{
+.${MENU_CLASS} .cykit-gh-text{
+  min-width:0;
+  flex:1;
+}
+.${MENU_CLASS} .cykit-gh-label{
   display:block;
   font-size:14px;
   font-weight:500;
 }
-.${MENU_CLASS} .preview{
+.${MENU_CLASS} .cykit-gh-preview{
   display:block;
   margin-top:1px;
   color:var(--fgColor-muted, #59636e);
@@ -247,6 +269,7 @@ function icon(format: CopyFormat): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round')
   svg.setAttribute('stroke-linejoin', 'round')
   svg.setAttribute('aria-hidden', 'true')
+  svg.setAttribute('class', 'cykit-gh-icon')
   svg.innerHTML = ICONS[format]
   return svg
 }
@@ -306,34 +329,40 @@ function openMenu(root: HTMLElement, button: HTMLButtonElement): void {
   menu.setAttribute('role', 'menu')
   menu.setAttribute('aria-label', 'Copy format')
 
-  const head = document.createElement('header')
-  const heading = document.createElement('b')
+  const head = document.createElement('div')
+  head.className = 'cykit-gh-head'
+  const heading = document.createElement('span')
+  heading.className = 'cykit-gh-title'
   heading.textContent = 'Copy to clipboard'
   head.appendChild(heading)
   if (ref) {
     const context = document.createElement('span')
+    context.className = 'cykit-gh-context'
     context.textContent = `${ref.owner}/${ref.repo} #${ref.number}`
     head.appendChild(context)
   }
   menu.appendChild(head)
 
-  const list = document.createElement('ul')
+  const list = document.createElement('div')
+  list.className = 'cykit-gh-list'
   for (const { id, label } of COPY_FORMATS) {
     const item = document.createElement('button')
     item.type = 'button'
+    item.className = 'cykit-gh-item'
     item.setAttribute('role', 'menuitem')
     item.appendChild(icon(id))
 
     const text = document.createElement('span')
+    text.className = 'cykit-gh-text'
     const name = document.createElement('span')
-    name.className = 'label'
+    name.className = 'cykit-gh-label'
     name.textContent = label
     text.appendChild(name)
 
     if (title) {
       for (const line of preview(id, title, url)) {
         const sample = document.createElement('span')
-        sample.className = 'preview'
+        sample.className = 'cykit-gh-preview'
         sample.textContent = line
         text.appendChild(sample)
       }
@@ -347,9 +376,7 @@ function openMenu(root: HTMLElement, button: HTMLButtonElement): void {
       runCopy(button, id)
     })
 
-    const row = document.createElement('li')
-    row.appendChild(item)
-    list.appendChild(row)
+    list.appendChild(item)
   }
   menu.appendChild(list)
 
@@ -411,6 +438,7 @@ function buildRoot(): HTMLElement {
 
   const button = document.createElement('button')
   button.type = 'button'
+  button.className = 'cykit-gh-trigger'
   button.textContent = 'Copy'
   button.title = 'Copy the title, the link, or both (CyKit)'
   button.setAttribute('aria-haspopup', 'menu')

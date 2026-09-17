@@ -214,6 +214,14 @@ what lands on the clipboard. "Title and link" previews as two lines because it
 copies two lines; the URL drops its scheme so more of the path survives the
 ellipsis.
 
+**Every class the widget creates is namespaced, and its stylesheet opens with a
+reset.** A span of `class="label"` is not ours on github.com — GitHub has its
+own `.label` rule, and it drew each row's title inside a bordered pill. The
+namespace stops the collision; the reset handles the other direction, where
+GitHub styles bare `button`/`ul`/`header` elements and anything we create
+inherits rules we never asked for. Both halves are covered by regression tests
+that load deliberately hostile CSS and assert the computed styles.
+
 Mechanics worth knowing:
 
 - It is `position: fixed`, placed from the button's bounding rect rather than

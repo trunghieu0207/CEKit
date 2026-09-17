@@ -26,7 +26,9 @@ Keep the globs broad and gate at apply time. Scope is **per feature**
 The content script also runs on **github.com**. `detectProduct` is host-aware
 and returns `github`; `isInScope` rejects it, so Cybozu features never follow
 the script onto GitHub. github.com markup is React with hashed CSS-module class
-names — match on `data-component` / `data-testid`, never on a class.
+names — match on `data-component` / `data-testid`, never on a class. The rule
+runs both ways: any element the extension injects needs a `cykit-`-namespaced
+class and a defensive reset, or the host page's own CSS styles it.
 
 ## Package manager: pnpm (required)
 
