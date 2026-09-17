@@ -208,12 +208,24 @@ PROJ-142: Cache the weekly schedule query
 https://github.com/example-org/example-app/pull/248
 ```
 
-The menu is `position: fixed`, positioned from the button's rect rather than
-absolutely inside the wrapper, so an ancestor with `overflow: hidden` in
-GitHub's header cannot clip it; the trade-off is that scrolling closes it. It
-also closes on Escape, on a click outside, and when the feature is switched off
-— each of those unbinds its own listeners, so nothing is left attached to
-`document` after the menu is gone.
+The menu follows Primer's ActionMenu shape — a 12px overlay, a header naming
+the item being copied, then rows with a leading icon, a label, and a preview of
+what lands on the clipboard. "Title and link" previews as two lines because it
+copies two lines; the URL drops its scheme so more of the path survives the
+ellipsis.
+
+Mechanics worth knowing:
+
+- It is `position: fixed`, placed from the button's bounding rect rather than
+  absolutely inside the wrapper, because an ancestor with `overflow: hidden` in
+  GitHub's header would otherwise clip it. The trade-off is that it does not
+  follow the page, so scrolling closes it.
+- It closes on Escape, an outside `pointerdown`, a second click on the button,
+  scroll, resize, and when the feature is switched off. Every one of those
+  paths unbinds the listeners it added, so nothing stays attached to `document`
+  once the menu is gone.
+- Arrow keys move between rows and wrap at both ends, which is what the `menu`
+  role promises.
 
 Four things this has to get right:
 

@@ -116,37 +116,92 @@ function ensureStyle(): void {
   border-color:var(--borderColor-success-emphasis, #1a7f37);
   color:var(--fgColor-success, #1a7f37);
 }
+
+/* Shaped after Primer's ActionMenu: 12px overlay, a titled header, a full-bleed
+   divider, then 6px-radius rows that highlight on hover. */
 .${MENU_CLASS}{
   position:fixed;
   z-index:2147483000;
-  min-width:172px;
-  padding:4px;
+  width:320px;
+  max-width:calc(100vw - 16px);
+  padding:0;
   border:1px solid var(--borderColor-default, #d1d9e0);
   border-radius:12px;
-  background:var(--overlay-bgColor, var(--bgColor-default, #fff));
-  box-shadow:var(--shadow-floating-small, 0 8px 24px rgba(31,35,40,.16));
-  font:inherit;
-  font-size:14px;
-}
-.${MENU_CLASS} button{
-  display:block;
-  width:100%;
-  padding:6px 10px;
-  border:0;
-  border-radius:6px;
-  background:none;
+  background:var(--overlay-bgColor, var(--bgColor-default, #ffffff));
+  box-shadow:var(--shadow-floating-small, 0 8px 24px rgba(31,35,40,.2));
   color:var(--fgColor-default, #1f2328);
   font:inherit;
   font-size:14px;
   line-height:20px;
   text-align:left;
+  overflow:hidden;
+}
+.${MENU_CLASS} header{
+  padding:12px 16px;
+  border-bottom:1px solid var(--borderColor-muted, #d1d9e0);
+}
+.${MENU_CLASS} header b{
+  display:block;
+  font-size:14px;
+  font-weight:600;
+}
+.${MENU_CLASS} header span{
+  display:block;
+  margin-top:2px;
+  color:var(--fgColor-muted, #59636e);
+  font-size:12px;
+  line-height:16px;
   white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.${MENU_CLASS} ul{
+  margin:0;
+  padding:8px;
+  list-style:none;
+}
+.${MENU_CLASS} button{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  width:100%;
+  padding:8px 10px;
+  border:0;
+  border-radius:6px;
+  background:none;
+  color:inherit;
+  font:inherit;
+  text-align:left;
   cursor:pointer;
 }
 .${MENU_CLASS} button:hover,
 .${MENU_CLASS} button:focus-visible{
   background:var(--bgColor-neutral-muted, #eef1f4);
   outline:none;
+}
+.${MENU_CLASS} svg{
+  flex:none;
+  margin-top:2px;
+  color:var(--fgColor-muted, #59636e);
+}
+.${MENU_CLASS} button:hover svg,
+.${MENU_CLASS} button:focus-visible svg{
+  color:var(--fgColor-default, #1f2328);
+}
+.${MENU_CLASS} .label{
+  display:block;
+  font-size:14px;
+  font-weight:500;
+}
+.${MENU_CLASS} .preview{
+  display:block;
+  margin-top:1px;
+  color:var(--fgColor-muted, #59636e);
+  font-size:12px;
+  line-height:16px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }`
   ;(document.head ?? document.documentElement).appendChild(style)
 }
@@ -168,6 +223,44 @@ async function copy(text: string): Promise<boolean> {
     area.remove()
     return ok
   }
+}
+
+/**
+ * Leading icons, one per format. Drawn here rather than pulled from an icon set
+ * so the menu carries no extra dependency: stacked lines for text, a chain for
+ * a link, offset sheets for both.
+ */
+const ICONS: Record<CopyFormat, string> = {
+  both: '<rect x="5.75" y="5.75" width="8.5" height="8.5" rx="2"/><path d="M11 3.75H4.5a2 2 0 0 0-2 2V12"/>',
+  title: '<path d="M3 4.5h10M3 8h10M3 11.5h6"/>',
+  link: '<path d="M6.4 9.6 9.6 6.4"/><path d="M8.6 4.6 10 3.2a2.7 2.7 0 1 1 3.8 3.8l-1.4 1.4"/><path d="M7.4 11.4 6 12.8A2.7 2.7 0 1 1 2.2 9l1.4-1.4"/>',
+}
+
+function icon(format: CopyFormat): SVGSVGElement {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('viewBox', '0 0 16 16')
+  svg.setAttribute('width', '16')
+  svg.setAttribute('height', '16')
+  svg.setAttribute('fill', 'none')
+  svg.setAttribute('stroke', 'currentColor')
+  svg.setAttribute('stroke-width', '1.5')
+  svg.setAttribute('stroke-linecap', 'round')
+  svg.setAttribute('stroke-linejoin', 'round')
+  svg.setAttribute('aria-hidden', 'true')
+  svg.innerHTML = ICONS[format]
+  return svg
+}
+
+/**
+ * The lines this format would put on the clipboard, one preview row each — so
+ * "Title and link" visibly previews as two lines, which is what it copies. The
+ * scheme is dropped from the URL to leave more of the path before the ellipsis.
+ */
+function preview(format: CopyFormat, title: string, url: string): string[] {
+  const short = url.replace(/^https?:\/\//, '')
+  if (format === 'title') return [title]
+  if (format === 'link') return [short]
+  return [title, short]
 }
 
 /**
@@ -204,23 +297,61 @@ function runCopy(button: HTMLButtonElement, format: CopyFormat): void {
 function openMenu(root: HTMLElement, button: HTMLButtonElement): void {
   closeMenu?.()
 
+  const ref = parseIssuePath(loc.pathname)
+  const title = ref ? readTitle(ref) : null
+  const url = ref ? canonicalUrl(loc.origin, ref) : ''
+
   const menu = document.createElement('div')
   menu.className = MENU_CLASS
   menu.setAttribute('role', 'menu')
+  menu.setAttribute('aria-label', 'Copy format')
 
+  const head = document.createElement('header')
+  const heading = document.createElement('b')
+  heading.textContent = 'Copy to clipboard'
+  head.appendChild(heading)
+  if (ref) {
+    const context = document.createElement('span')
+    context.textContent = `${ref.owner}/${ref.repo} #${ref.number}`
+    head.appendChild(context)
+  }
+  menu.appendChild(head)
+
+  const list = document.createElement('ul')
   for (const { id, label } of COPY_FORMATS) {
     const item = document.createElement('button')
     item.type = 'button'
-    item.textContent = label
     item.setAttribute('role', 'menuitem')
+    item.appendChild(icon(id))
+
+    const text = document.createElement('span')
+    const name = document.createElement('span')
+    name.className = 'label'
+    name.textContent = label
+    text.appendChild(name)
+
+    if (title) {
+      for (const line of preview(id, title, url)) {
+        const sample = document.createElement('span')
+        sample.className = 'preview'
+        sample.textContent = line
+        text.appendChild(sample)
+      }
+    }
+    item.appendChild(text)
+
     item.addEventListener('click', (event) => {
       event.preventDefault()
       event.stopPropagation()
       close()
       runCopy(button, id)
     })
-    menu.appendChild(item)
+
+    const row = document.createElement('li')
+    row.appendChild(item)
+    list.appendChild(row)
   }
+  menu.appendChild(list)
 
   root.appendChild(menu)
 
@@ -249,7 +380,19 @@ function openMenu(root: HTMLElement, button: HTMLButtonElement): void {
     if (event.key === 'Escape') {
       close()
       button.focus()
+      return
     }
+
+    // Arrow keys move between items, which is what a menu role promises.
+    const items = [...menu.querySelectorAll('button')]
+    const at = items.indexOf(document.activeElement as HTMLButtonElement)
+    if (at === -1) return
+
+    const step =
+      event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0
+    if (step === 0) return
+    event.preventDefault()
+    items[(at + step + items.length) % items.length]?.focus()
   }
 
   document.addEventListener('pointerdown', onPointerDown, true)
