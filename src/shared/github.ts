@@ -30,8 +30,19 @@ export function canonicalUrl(origin: string, ref: IssueRef): string {
   return `${origin}/${ref.owner}/${ref.repo}/${ref.kind}/${ref.number}`
 }
 
-/** The text placed on the clipboard: title on the first line, link on the second. */
-export function formatCopyText(title: string, url: string): string {
+/** What the Copy button puts on the clipboard. */
+export type CopyFormat = 'both' | 'title' | 'link'
+
+export const COPY_FORMATS: readonly { id: CopyFormat; label: string }[] = [
+  { id: 'both', label: 'Title and link' },
+  { id: 'title', label: 'Title only' },
+  { id: 'link', label: 'Link only' },
+]
+
+/** Title on the first line, link on the second — or just one of them. */
+export function formatCopyText(title: string, url: string, format: CopyFormat): string {
+  if (format === 'title') return title
+  if (format === 'link') return url
   return `${title}\n${url}`
 }
 

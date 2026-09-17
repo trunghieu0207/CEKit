@@ -35,7 +35,7 @@ export const PANELS: readonly PanelEntry[] = [
   {
     id: 'github',
     label: 'GitHub',
-    hint: 'Copy title and link',
+    hint: 'Copy title or link',
     glyph: 'PR',
     isOn: (s) => s.github.enabled,
     Component: GithubPanel,

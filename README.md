@@ -7,7 +7,7 @@ kintone, Garoon, and the cybozu.com portal.
 bundled, more readable webfont, and scales text size and weight.
 
 **Feature 2 — GitHub.** Adds a Copy button to pull request and issue pages that
-puts the title and a canonical link on the clipboard.
+puts the title, the canonical link, or both on the clipboard.
 
 ## Setup
 
@@ -200,12 +200,20 @@ The extension's own code is MIT and separate from the fonts.
 ## The GitHub feature
 
 `src/content/features/github-copy.ts` puts a **Copy** button next to the title
-on `/pull/N` and `/issues/N` pages. It copies:
+on `/pull/N` and `/issues/N` pages. Clicking it opens a menu offering *Title and
+link*, *Title only* or *Link only*. The first gives:
 
 ```
 PROJ-142: Cache the weekly schedule query
 https://github.com/example-org/example-app/pull/248
 ```
+
+The menu is `position: fixed`, positioned from the button's rect rather than
+absolutely inside the wrapper, so an ancestor with `overflow: hidden` in
+GitHub's header cannot clip it; the trade-off is that scrolling closes it. It
+also closes on Escape, on a click outside, and when the feature is switched off
+— each of those unbinds its own listeners, so nothing is left attached to
+`document` after the menu is gone.
 
 Four things this has to get right:
 
