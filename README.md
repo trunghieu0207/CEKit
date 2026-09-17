@@ -318,10 +318,18 @@ not implemented yet.
 
 ## Releasing an update
 
+**Bump once per upload, not once per change.** The version in
+`public/manifest.json` tracks what the store has published, so it should only
+move when a package is actually going to be uploaded. Several commits landing
+between releases all ship under the same next version.
+
 ```sh
-pnpm bump          # patch by default; also `pnpm bump minor` / `major`
+pnpm bump          # once, when you are about to upload
 pnpm package       # builds, zips dist/, and checks the archive
 ```
+
+While iterating, run `pnpm package` on its own — it rebuilds the zip at the
+current version, overwriting the previous file.
 
 Then upload `cykit-<version>.zip` in the developer dashboard and submit. The
 listing text, images and permission justifications persist between updates, so

@@ -11,6 +11,10 @@ Two Vite builds, because MV3 content scripts cannot be ES modules:
 
 Load the extension from `dist/`, not the repo root.
 
+`pnpm bump` is a **release** step, not a per-commit one: the version tracks what
+the Chrome Web Store has published. Run it once, immediately before an upload;
+use `pnpm package` alone while iterating.
+
 `public/fonts/` and `public/icons/` are generated (`pnpm fonts`, `pnpm icons`);
 `src/shared/generated/` is generated too. Never edit those by hand.
 

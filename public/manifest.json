@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CyKit Extension",
-  "version": "0.1.4",
+  "version": "0.1.2",
   "description": "Read and share work items faster: a cleaner, larger font on kintone and Garoon, plus one-click copy of GitHub PR titles and links.",
   "icons": {
     "16": "icons/icon-16.png",
